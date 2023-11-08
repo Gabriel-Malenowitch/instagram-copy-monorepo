@@ -26,4 +26,17 @@ class Http {
 
     return result;
   }
+
+  static Future<User?> getUserById(String id) async {
+    final response = await http.get(Uri.parse('$BASE_URL/users/$id'));
+    dynamic decodedUser = jsonDecode(response.body);
+
+    User user = User();
+    user.id = decodedUser["Id"]!;
+    user.user = decodedUser["User"]!;
+    user.created_at = decodedUser["Created_at"]!;
+    user.updated_at = decodedUser["Updated_at"]!;
+
+    return user;
+  }
 }

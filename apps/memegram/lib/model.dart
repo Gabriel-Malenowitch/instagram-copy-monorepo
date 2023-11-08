@@ -8,3 +8,10 @@ class Post {
   late String updated_at;
   late int likes;
 }
+
+class User {
+  late String id;
+  late String user;
+  late String created_at;
+  late String updated_at;
+}

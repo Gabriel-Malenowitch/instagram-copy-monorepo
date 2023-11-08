@@ -2,6 +2,41 @@ import 'package:flutter/material.dart';
 import 'package:memegram/http.dart';
 import 'package:memegram/model.dart';
 
+class UsernameById extends StatefulWidget {
+  final String id;
+  const UsernameById(this.id, {Key? key}) : super(key: key);
+
+  @override
+  // ignore: no_logic_in_create_state
+  UsernameByIdState createState() => UsernameByIdState(id: id);
+}
+
+class UsernameByIdState extends State<UsernameById> {
+  final String id;
+  UsernameByIdState({required this.id});
+  User? user;
+
+  @override
+  void initState() {
+    Future<void> getUser() async {
+      User? response = await Http.getUserById(id);
+      if (response != null) {
+        setState(() {
+          user = response;
+        });
+      }
+    }
+
+    getUser();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(user?.user ?? " ");
+  }
+}
+
 class FeedCard extends StatefulWidget {
   final Post post;
   const FeedCard(this.post, {Key? key}) : super(key: key);
@@ -30,7 +65,7 @@ class FeedCardState extends State<FeedCard> {
                   child: Row(
                     children: [
                       const Icon(Icons.account_circle_outlined),
-                      Text(post.user_id)
+                      UsernameById(post.user_id)
                     ],
                   )),
               Container(
