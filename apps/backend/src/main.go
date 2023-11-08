@@ -11,7 +11,8 @@ import (
 
 func internalProxy(handler func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request) {
 	callback := func(writer http.ResponseWriter, request *http.Request) {
-		// Do something...
+		writer.Header().Set("Access-Control-Allow-Origin", "*")
+
 		handler(writer, request)
 	}
 
