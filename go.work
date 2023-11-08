@@ -1,3 +1,4 @@
 go 1.21.3
 
 use ./apps/backend/src
+use ./apps/backend/src/model
