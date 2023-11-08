@@ -4,6 +4,10 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start:backend": "nx server backend"
+    "start:backend": "nx server backend",
+    "start:mobile": "nx run memegram"
+  },
+  "devDependencies": {
+    "@nxrocks/nx-flutter": "^8.0.1"
   }
 }
