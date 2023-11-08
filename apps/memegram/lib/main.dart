@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:memegram/feed.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,7 +28,7 @@ class App extends StatefulWidget {
 
 class AppState extends State<App> {
   int currentBodyIndex = 0;
-  List<Widget> bodyOptions = <Widget>[FeedWidget()];
+  List<Widget> bodyOptions = <Widget>[const FeedWidget()];
 
   void onItemTap(int index) {
     setState(() {
@@ -38,10 +39,24 @@ class AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: const Center(
+          child: Text(
+            "Memegram",
+            // style: TextStyle(fontFamily: ""),
+          ),
+        ),
+      ),
+      body: bodyOptions.elementAt(currentBodyIndex),
       bottomNavigationBar: BottomNavigationBar(items: const [
         BottomNavigationBarItem(
-            icon: Icon(Icons.feed_outlined), activeIcon: Icon(Icons.feed))
+            icon: Icon(Icons.feed_outlined),
+            activeIcon: Icon(Icons.feed),
+            label: "Feed"),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.account_circle_outlined),
+            activeIcon: Icon(Icons.account_circle),
+            label: "Profile"),
       ], currentIndex: currentBodyIndex, onTap: onItemTap),
     );
   }
