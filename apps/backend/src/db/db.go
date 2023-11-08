@@ -45,6 +45,30 @@ func InsertUser(user model.UserInsertPayload) {
 	defer conn.Close()
 }
 
+func Follow(followPayload model.Followers) {
+	conn, err := OpenDBConnection()
+	utils.ThrowPanic(err)
+	var id string
+
+	sql := `INSERT INTO followers(user_id,user_refer) VALUES($1,$2) RETURNING user_id`
+	err = conn.QueryRow(sql, followPayload.User_id, followPayload.User_refer).Scan(&id)
+	utils.ThrowPanic(err)
+
+	defer conn.Close()
+}
+
+func Unfollow(followPayload model.Followers) {
+	conn, err := OpenDBConnection()
+	utils.ThrowPanic(err)
+	var id string
+
+	sql := `DELETE FROM followers WHERE user_id=$1 AND user_refer=$2 RETURNING user_id`
+	err = conn.QueryRow(sql, followPayload.User_id, followPayload.User_refer).Scan(&id)
+	utils.ThrowPanic(err)
+
+	defer conn.Close()
+}
+
 func GetUserById(id string) model.UserResponse {
 	conn, err := OpenDBConnection()
 	utils.ThrowPanic(err)
@@ -71,6 +95,38 @@ func GetUserById(id string) model.UserResponse {
 
 	defer conn.Close()
 	return user
+}
+
+func GetPosts() []model.Post {
+	conn, err := OpenDBConnection()
+	utils.ThrowPanic(err)
+
+	userRow, err := conn.Query(`SELECT * FROM posts`)
+	utils.ThrowPanic(err)
+
+	var posts []model.Post
+
+	var Id, User_id, Post_refer, Created_at, Updated_at string
+	var Likes int
+	for userRow.Next() {
+		err = userRow.Scan(&Id, &User_id, &Post_refer, &Created_at, &Updated_at, &Likes)
+		utils.ThrowPanic(err)
+
+		var post = model.Post{
+			Id:         Id,
+			User_id:    User_id,
+			Post_refer: Post_refer,
+			Created_at: Created_at,
+			Updated_at: Updated_at,
+			Likes:      Likes,
+		}
+
+		posts = append(posts, post)
+	}
+
+	defer userRow.Close()
+	defer conn.Close()
+	return posts
 }
 
 func GetUserConfigurationById(id string) model.UserConfiguration {

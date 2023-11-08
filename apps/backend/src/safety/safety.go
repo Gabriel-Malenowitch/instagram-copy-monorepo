@@ -18,3 +18,18 @@ func IsValidUpdateUserConfigurationPayload(user model.UserConfigurationPayload) 
 	// Validate here
 	return true
 }
+
+func IsValidFollowPayload(user model.Followers) bool {
+	// Validate here
+	return true
+}
+
+func IsValidUnfollowPayload(user model.Followers) bool {
+	// Validate here
+	return true
+}
+
+func IsValidLoginPayload(user model.Login) bool {
+	// Validate here
+	return true
+}

@@ -6,22 +6,24 @@ import (
 	"backend/utils"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"model"
 	"net/http"
 
 	"github.com/gorilla/mux"
 )
 
-func Login(writer http.ResponseWriter, request *http.Request) {
-	body := request.Body
-	fmt.Println("Payload:", body)
-}
-
 func GetUserById(writer http.ResponseWriter, request *http.Request) {
 	params := mux.Vars(request)
 	user := db.GetUserById(params["id"])
 	byteArray, err := json.Marshal(user)
+	utils.ThrowPanic(err)
+
+	writer.Write(byteArray)
+}
+
+func GetPosts(writer http.ResponseWriter, request *http.Request) {
+	posts := db.GetPosts()
+	byteArray, err := json.Marshal(posts)
 	utils.ThrowPanic(err)
 
 	writer.Write(byteArray)
@@ -47,6 +49,32 @@ func InsertUser(writer http.ResponseWriter, request *http.Request) {
 	}
 
 	db.InsertUser(user)
+}
+
+func Follow(writer http.ResponseWriter, request *http.Request) {
+	var followPayload model.Followers
+	err := json.NewDecoder(request.Body).Decode(&followPayload)
+	utils.ThrowPanic(err)
+
+	isValidPayload := safety.IsValidFollowPayload(followPayload)
+	if !isValidPayload {
+		utils.ThrowPanic(errors.New("invalid data"))
+	}
+
+	db.Follow(followPayload)
+}
+
+func Unfollow(writer http.ResponseWriter, request *http.Request) {
+	var unfollowPayload model.Followers
+	err := json.NewDecoder(request.Body).Decode(&unfollowPayload)
+	utils.ThrowPanic(err)
+
+	isValidPayload := safety.IsValidUnfollowPayload(unfollowPayload)
+	if !isValidPayload {
+		utils.ThrowPanic(errors.New("invalid data"))
+	}
+
+	db.Unfollow(unfollowPayload)
 }
 
 func UpdateUser(writer http.ResponseWriter, request *http.Request) {

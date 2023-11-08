@@ -7,6 +7,10 @@ type User struct {
 	Updated_at string
 }
 
+type Login struct {
+	User_id string
+}
+
 type UserInsertPayload struct {
 	User string `validate:"required"`
 }
@@ -38,7 +42,7 @@ type UserConfigurationPayload struct {
 
 type Followers struct {
 	User_id    string
-	User_refer int
+	User_refer string
 }
 
 type Post struct {

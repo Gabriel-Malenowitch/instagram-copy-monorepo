@@ -22,10 +22,13 @@ func main() {
 	log.Println("Server started on: http://localhost:9000")
 	router := mux.NewRouter()
 
-	http.HandleFunc("/login", internalProxy(api.Login))
 	router.HandleFunc("/users/{id:.+}", SingleUser).Methods("GET", "PUT")
 	router.HandleFunc("/configurations/{id:.+}", SingleConfiguration).Methods("GET", "PUT")
+	router.HandleFunc("/follow", internalProxy(api.Follow)).Methods("POST")
+	router.HandleFunc("/unfollow", internalProxy(api.Unfollow)).Methods("POST")
 	router.HandleFunc("/users", internalProxy(api.InsertUser)).Methods("POST")
+	router.HandleFunc("/posts", internalProxy(api.GetPosts)).Methods("GET")
+	// router.HandleFunc("/comments/{post_id:.+}", internalProxy(api.InsertComment)).Methods("POST")
 
 	server := &http.Server{
 		Handler:      router,
